@@ -8,33 +8,46 @@ header {
     padding: 20px;
 }
 header nav a { color: white; margin: 0 8px; font-weight: bold; text-decoration: none; }
+header nav a:hover { text-decoration: underline; }
 
 #infoMeja {
     background: #ffffff22;
     display: inline-block;
     padding: 5px 15px;
     border-radius: 20px;
+    margin-top: 10px;
 }
 
 .container { max-width: 900px; margin: 0 auto; padding: 15px; }
 
 .menu {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
 }
 .menu-card {
     background: #fff;
     border-radius: 10px;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
-    box-shadow: 0 1px 4px #0002;
+    box-shadow: 0 2px 6px #0001;
+    transition: transform 0.2s;
 }
-.menu-card h4 { margin: 8px 0 4px; }
-.menu-card p { margin: 0 0 8px; color: #555; }
-.menu-card button { padding: 6px 10px; cursor: pointer; }
+.menu-card:hover { transform: translateY(-3px); }
+.menu-card h4 { margin: 8px 0 4px; font-size: 16px; }
+.menu-card p { margin: 0 0 8px; color: #555; font-weight: bold; }
+.menu-card button { 
+    padding: 8px 12px; 
+    cursor: pointer; 
+    background: #4CAF50; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    font-weight: bold;
+    width: 100%;
+}
+.menu-card button:hover { background: #45a049; }
 
-/* Ukuran kotak gambar sama untuk semua kartu (foto maupun emoji) */
 .card-img-box {
     width: 100%;
     height: 110px;
@@ -46,7 +59,123 @@ header nav a { color: white; margin: 0 8px; font-weight: bold; text-decoration: 
     justify-content: center;
 }
 .card-img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card-img-box .emoji { font-size: 42px; }
+.card-img-box .emoji { font-size: 48px; }
 
-#keranjang { margin-top: 20px; background: #fff; padding: 15px; border-radius: 10px; }
-footer { text-align: center; padding: 15px; color: #666; }
+/* Badge Terjual */
+.terjual-badge {
+    font-size: 12px;
+    color: #e65100;
+    font-weight: bold;
+    background: #fff3e0;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    margin: 5px 0 10px 0;
+}
+
+#keranjang { 
+    margin-top: 25px; 
+    background: #fff; 
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 8px #0001;
+}
+
+.btn-reset {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-proses {
+    background-color: #25D366; 
+    color: white; 
+    padding: 14px; 
+    width: 100%; 
+    border: none; 
+    border-radius: 6px; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-top: 15px; 
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(37, 211, 102, 0.3);
+}
+.btn-proses:hover { background-color: #128C7E; }
+
+.btn-qty {
+    padding: 4px 10px;
+    margin: 0 2px;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-qty:hover { background: #d0d0d0; }
+
+footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+
+/* --- FITUR BARU: Modal Nota Digital --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 380px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+}
+.close:hover { color: #000; }
+
+.nota-header { text-align: center; font-family: 'Courier New', monospace; }
+.nota-header hr { border: 1px dashed #333; margin: 10px 0; }
+.nota-footer { text-align: center; margin-top: 20px; font-size: 12px; color: #555; font-family: 'Courier New', monospace; }
+
+.btn-print, .btn-wa {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-print { background-color: #607d8b; color: white; }
+.btn-print:hover { background-color: #455a64; }
+.btn-wa { background-color: #25D366; color: white; }
+.btn-wa:hover { background-color: #128C7E; }

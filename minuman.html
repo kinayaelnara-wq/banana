@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Minuman - Bu Nana</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <header>
@@ -26,21 +26,25 @@
             <div id="daftarPesanan">Belum ada pesanan.</div>
             <p>Total: <strong id="total">Rp0</strong></p>
 
-            <button onclick="kosongkanKeranjang()">
-                Kosongkan Pesanan
-            </button>
+            <button onclick="kosongkanKeranjang()" class="btn-reset">Kosongkan Pesanan</button>
 
-            <div style="margin-top:15px; text-align:left;">
-                <label for="catatanPesanan"><b>Catatan Pesanan:</b></label>
-                <textarea id="catatanPesanan"
-                    placeholder="Contoh: Es sedikit..."
-                    style="width:100%; height:60px; margin-top:5px;">
-                </textarea>
+            <div style="margin-top: 15px; text-align: left;">
+                <label for="catatanPesanan"><b>Catatan Pesanan:</b></label><br>
+                <textarea id="catatanPesanan" placeholder="Contoh: Es sedikit..." style="width: 100%; height: 60px; margin-top: 5px; border-radius: 5px; padding: 8px; border: 1px solid #ccc;"></textarea>
             </div>
 
-            <button onclick="kirimKeWhatsApp()"
-                style="background-color:#25D366; color:white; padding:12px; width:100%; margin-top:10px;">
-                Kirim Pesanan ke WhatsApp
+            <div style="margin-top: 15px; text-align: left;">
+                <label><b>Metode Pembayaran:</b></label><br>
+                <label style="margin-right: 15px; cursor: pointer;">
+                    <input type="radio" name="metodePembayaran" value="QRIS" checked> QRIS
+                </label>
+                <label style="cursor: pointer;">
+                    <input type="radio" name="metodePembayaran" value="Tunai"> Tunai
+                </label>
+            </div>
+
+            <button onclick="prosesPesanan()" class="btn-proses">
+                Proses Pesanan & Buat Nota 🧾
             </button>
         </section>
     </main>
@@ -49,6 +53,16 @@
         <p>Terima kasih sudah berkunjung ke Bu Nana!</p>
     </footer>
 
-    <script src="script.js?v=2"></script>
+    <!-- Modal Nota Digital -->
+    <div id="modalNota" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="tutupModal()">&times;</span>
+            <div id="notaDigital"></div>
+            <button onclick="cetakNota()" class="btn-print">🖨️ Cetak / Simpan PDF</button>
+            <button onclick="kirimWANota()" class="btn-wa">📱 Kirim ke WhatsApp</button>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
 </body>
 </html>
