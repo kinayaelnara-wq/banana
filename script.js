@@ -9,19 +9,20 @@ const makanan = [
     { nama: "IndTel Rebus", harga: 13000, icon: "🍜", gambar: "gambar/indtel-rebus.jpg" },
     { nama: "Soto", harga: 10000, icon: "🍲", gambar: "gambar/soto.jpg" }
 ];
+
 const minuman = [
-    { nama: "Es Teh", harga: 3000, icon: "🧋" },
-    { nama: "LemonTea", harga: 4000, icon: "🍋" },
-    { nama: "Es Jeruk", harga: 4000, icon: "🍊" },
-    { nama: "Nutrisari", harga: 4000, icon: "🧃" },
-    { nama: "Kopi Hitam", harga: 5000, icon: "☕" },
-    { nama: "Gooday", harga: 5000, icon: "🥤" },
-    { nama: "Cocolatos", harga: 5000, icon: "🧋" },
-    { nama: "Milo", harga: 5000, icon: "🥛" },
-    { nama: "Bengbeng", harga: 5000, icon: "🍫" },
-    { nama: "Teh Tarik", harga: 5000, icon: "🧋" },
-    { nama: "JosSua", harga: 7000, icon: "⚡" },
-    { nama: "Dancow", harga: 7000, icon: "🍼", isDancow: true }
+    { nama: "Es Teh", harga: 3000, icon: "🧋", gambar: "gambar/es-teh.jpg" },
+    { nama: "LemonTea", harga: 4000, icon: "🍋", gambar: "gambar/lemontea.jpg" },
+    { nama: "Es Jeruk", harga: 4000, icon: "🍊", gambar: "gambar/es-jeruk.jpg" },
+    { nama: "Nutrisari", harga: 4000, icon: "🧃", gambar: "gambar/nutrisari.jpg" },
+    { nama: "Kopi Hitam", harga: 5000, icon: "☕", gambar: "gambar/kopi-hitam.jpg" },
+    { nama: "Gooday", harga: 5000, icon: "🥤", gambar: "gambar/gooday.jpg" },
+    { nama: "Cocolatos", harga: 5000, icon: "🧋", gambar: "gambar/cocolatos.jpg" },
+    { nama: "Milo", harga: 5000, icon: "🥛", gambar: "gambar/milo.jpg" },
+    { nama: "Bengbeng", harga: 5000, icon: "🍫", gambar: "gambar/bengbeng.jpg" },
+    { nama: "Teh Tarik", harga: 5000, icon: "🧋", gambar: "gambar/teh-tarik.jpg" },
+    { nama: "JosSua", harga: 7000, icon: "⚡", gambar: "gambar/jossua.jpg" },
+    { nama: "Dancow", harga: 7000, icon: "🍼", gambar: "gambar/dancow.jpg", isDancow: true }
 ];
 
 // Ambil nomor meja dari URL parameter
@@ -53,11 +54,15 @@ function tampilkanMenu(daftar, idElemen) {
             extraHTML = '<select id="select-dancow" style="margin: 5px 0; padding: 3px; font-size: 12px;"><option value="Putih">Putih</option><option value="Coklat">Coklat</option></select>';
         }
 
-        card.innerHTML = '<div class="card-img-box">' +
-    (item.gambar
-        ? '<img src="' + item.gambar + '" alt="' + item.nama + '" style=style="width:100%; height:180px; object-fit:contain; display:block;">'
-        : '<span style="font-size:42px;">' + item.icon + '</span>') +
-    '</div>' +
+        let visual;
+        if (item.gambar) {
+            visual = '<img src="' + item.gambar + '" alt="' + item.nama + '" loading="lazy" ' +
+                'onerror="this.outerHTML=\'<span class=&quot;emoji&quot;>' + item.icon + '</span>\'">';
+        } else {
+            visual = '<span class="emoji">' + item.icon + '</span>';
+        }
+
+        card.innerHTML = '<div class="card-img-box">' + visual + '</div>' +
             '<h4>' + item.nama + '</h4>' +
             '<p>Rp' + item.harga.toLocaleString('id-ID') + '</p>' +
             extraHTML +
@@ -110,7 +115,7 @@ function perbaruiKeranjang() {
 
     if (keranjang.length === 0) {
         daftarPesanan.innerHTML = "Belum ada pesanan.";
-        totalEl.innerText = "0";
+        totalEl.innerText = "Rp0";
         return;
     }
 
@@ -137,7 +142,7 @@ function perbaruiKeranjang() {
         daftarPesanan.appendChild(div);
     });
 
-    totalEl.innerText = total.toLocaleString('id-ID');
+    totalEl.innerText = 'Rp' + total.toLocaleString('id-ID');
 }
 
 function kosongkanKeranjang() {
@@ -152,7 +157,6 @@ function kirimKeWhatsApp() {
         return;
     }
 
-    let nomorMeja = document.getElementById("nomorMeja") ? document.getElementById("nomorMeja").value : "Tanpa Meja";
     let inputCatatan = document.getElementById("catatanPesanan");
     let catatan = inputCatatan ? inputCatatan.value : "";
     let nomorAdmin = "6281230139560"; // Nomor WhatsApp Bu Nana / Admin
