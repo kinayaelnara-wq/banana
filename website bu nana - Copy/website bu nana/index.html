@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotek & Kupat Tahu Bu Nana</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Lotek & Kupat Tahu Bu Nana</h1>
+        <p>Silakan pilih makanan favorit kamu!</p>
+        <h3 id="infoMeja">Meja: -</h3>
+    </header>
+
+    <main class="container">
+        <h2>Menu Makanan</h2>
+
+        <div class="menu" id="menuMakanan"></div>
+
+        <section id="keranjang">
+            <h2>Pesanan Kamu</h2>
+            <div id="daftarPesanan">Belum ada pesanan.</div>
+            <p>Total: <strong id="total">Rp0</strong></p>
+            <button onclick="kosongkanKeranjang()">
+                Kosongkan Pesanan
+            </button>
+            <!-- Tambahan Catatan & Tombol Kirim WA -->
+    <div style="margin-top: 15px; text-align: left;">
+        <label for="catatanPesanan"><b>Catatan Pesanan:</b></label><br>
+        <textarea id="catatanPesanan" placeholder="Contoh: Jangan terlalu pedas, es dikit..." style="width: 100%; height: 60px; margin-top: 5px; border-radius: 5px; padding: 8px; border: 1px solid #ccc;"></textarea>
+    </div>
+
+    <button onclick="kirimKeWhatsApp()" style="background-color: #25D366; color: white; padding: 12px; width: 100%; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; margin-top: 10px; cursor: pointer;">
+        Kirim Pesanan ke WhatsApp 📱
+    </button>
+        </section>
+    </main>
+
+    <footer>
+        <p>Terima kasih sudah berkunjung ke Bu Nana!</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

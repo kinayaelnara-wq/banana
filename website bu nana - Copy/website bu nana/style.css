@@ -1,0 +1,13 @@
+header {
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+}
+
+#infoMeja {
+    background: #ffffff22;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
