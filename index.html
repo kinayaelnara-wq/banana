@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- File CSS -->
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <!-- HEADER HANYA SATU -->
@@ -31,10 +31,17 @@
 
         <section id="keranjang">
             <h2>Pesanan Kamu</h2>
+
+            <!-- INFO BOX: Muncul saat keranjang ada isinya -->
+            <div id="infoEditPesanan" style="display: none; background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; text-align: left;">
+                💡 <b>Pesanan sudah dikirim.</b><br>
+                Jika admin menginfokan ada menu yang <b>habis</b>, silakan klik tombol 🗑️ pada menu tersebut, lalu klik <b>"Proses Pesanan"</b> lagi untuk mengirim revisi.
+            </div>
+
             <div id="daftarPesanan">Belum ada pesanan.</div>
             <p>Total: <strong id="total">Rp0</strong></p>
             
-            <button onclick="kosongkanKeranjang()" class="btn-reset">Kosongkan Pesanan</button>
+            <button onclick="kosongkanKeranjang()" class="btn-reset">🗑️ Kosongkan Semua Pesanan</button>
             
             <div style="margin-top: 15px; text-align: left;">
                 <label for="catatanPesanan"><b>Catatan Pesanan:</b></label><br>
@@ -73,6 +80,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 </body>
 </html>
