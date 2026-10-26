@@ -29,11 +29,10 @@ const minuman = [
 const urlParams = new URLSearchParams(window.location.search);
 const nomorMeja = urlParams.get('meja') || 'Tanpa Meja';
 
-// --- FITUR BARU: Pelacakan Penjualan (LocalStorage) ---
+// --- FITUR: Pelacakan Penjualan (LocalStorage) ---
 function getSalesData() {
     const saved = localStorage.getItem('salesBuNana');
     let data = saved ? JSON.parse(saved) : {};
-    // Pastikan semua item saat ini ada di data (default 0 jika baru ditambahkan)
     [...makanan, ...minuman].forEach(item => {
         if (data[item.nama] === undefined) data[item.nama] = 0;
     });
@@ -41,12 +40,23 @@ function getSalesData() {
 }
 let salesData = getSalesData();
 
+// --- FITUR BARU: Simpan Keranjang di LocalStorage ---
+// Agar pesanan tidak hilang saat refresh / tutup modal / admin info menu habis
+let keranjang = JSON.parse(localStorage.getItem('keranjangBuNana')) || [];
+
+function simpanKeranjang() {
+    localStorage.setItem('keranjangBuNana', JSON.stringify(keranjang));
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const elMeja = document.getElementById("infoMeja");
     if (elMeja) elMeja.innerText = "Nomor Meja: " + nomorMeja;
 
     tampilkanMenu(makanan, "menuMakanan");
     tampilkanMenu(minuman, "menuMinuman");
+
+    // Tampilkan keranjang yang tersimpan saat halaman dibuka
+    perbaruiKeranjang();
 });
 
 function tampilkanMenu(daftar, idElemen) {
@@ -63,7 +73,6 @@ function tampilkanMenu(daftar, idElemen) {
             extraHTML = '<select id="select-dancow" style="margin: 5px 0; padding: 3px; font-size: 12px; width:100%;"><option value="Putih">Dancow Putih</option><option value="Coklat">Dancow Coklat</option></select>';
         }
 
-        // Tampilkan jumlah terjual
         const terjual = salesData[item.nama] || 0;
         const badgeTerjual = `<div class="terjual-badge">🔥 Terjual: ${terjual}</div>`;
 
@@ -85,8 +94,6 @@ function tampilkanMenu(daftar, idElemen) {
 }
 
 // Fitur Keranjang Pesanan
-let keranjang = [];
-
 function tambahItem(namaDasar, harga, isDancow) {
     let namaFinal = namaDasar;
     if (isDancow) {
@@ -101,25 +108,44 @@ function tambahItem(namaDasar, harga, isDancow) {
     } else {
         keranjang.push({ nama: namaFinal, harga: harga, jumlah: 1 });
     }
+    simpanKeranjang();
     perbaruiKeranjang();
 }
 
 function ubahJumlah(index, delta) {
     keranjang[index].jumlah += delta;
-    if (keranjang[index].jumlah <= 0) keranjang.splice(index, 1);
+    if (keranjang[index].jumlah <= 0) {
+        keranjang.splice(index, 1);
+    }
+    simpanKeranjang();
     perbaruiKeranjang();
+}
+
+// --- FITUR BARU: Hapus 1 item spesifik (untuk kasus menu habis) ---
+function hapusItem(index) {
+    const namaItem = keranjang[index].nama;
+    if (confirm(`Hapus "${namaItem}" dari pesanan?\n(Gunakan ini jika admin menginfokan menu sedang habis)`)) {
+        keranjang.splice(index, 1);
+        simpanKeranjang();
+        perbaruiKeranjang();
+    }
 }
 
 function perbaruiKeranjang() {
     const daftarPesanan = document.getElementById("daftarPesanan");
     const totalEl = document.getElementById("total");
+    const infoEdit = document.getElementById("infoEditPesanan");
     if (!daftarPesanan || !totalEl) return;
 
     if (keranjang.length === 0) {
         daftarPesanan.innerHTML = "Belum ada pesanan.";
         totalEl.innerText = "Rp0";
+        if (infoEdit) infoEdit.style.display = "none";
         return;
     }
+
+    // Tampilkan info box jika ada pesanan
+    if (infoEdit) infoEdit.style.display = "block";
 
     daftarPesanan.innerHTML = "";
     let total = 0;
@@ -128,16 +154,17 @@ function perbaruiKeranjang() {
         let subtotal = item.harga * item.jumlah;
         total += subtotal;
         const div = document.createElement("div");
-        div.style.display = "flex";
-        div.style.justifyContent = "space-between";
-        div.style.alignItems = "center";
-        div.style.margin = "8px 0";
-        div.style.fontSize = "14px";
+        div.className = "item-keranjang";
 
-        div.innerHTML = '<span>' + (index + 1) + '. ' + item.nama + ' (x' + item.jumlah + ')<br><small>Rp' + subtotal.toLocaleString('id-ID') + '</small></span>' +
-            '<div>' +
-            '<button onclick="ubahJumlah(' + index + ', -1)" class="btn-qty">-</button>' +
-            '<button onclick="ubahJumlah(' + index + ', 1)" class="btn-qty">+</button>' +
+        div.innerHTML = 
+            '<div style="flex: 1; padding-right: 10px;">' +
+                '<div style="font-weight: 600; font-size: 14px;">' + item.nama + ' <span style="color:#2e7d32;">(x' + item.jumlah + ')</span></div>' +
+                '<small style="color: #607d8b;">Rp' + subtotal.toLocaleString('id-ID') + '</small>' +
+            '</div>' +
+            '<div style="display: flex; align-items: center; gap: 6px;">' +
+                '<button onclick="ubahJumlah(' + index + ', -1)" class="btn-qty" title="Kurangi">-</button>' +
+                '<button onclick="ubahJumlah(' + index + ', 1)" class="btn-qty" title="Tambah">+</button>' +
+                '<button onclick="hapusItem(' + index + ')" class="btn-hapus" title="Hapus menu ini (jika habis)">🗑️</button>' +
             '</div>';
         daftarPesanan.appendChild(div);
     });
@@ -146,11 +173,15 @@ function perbaruiKeranjang() {
 }
 
 function kosongkanKeranjang() {
-    keranjang = [];
-    perbaruiKeranjang();
+    if (keranjang.length === 0) return;
+    if (confirm("Yakin ingin mengosongkan SEMUA pesanan dan mulai dari awal?")) {
+        keranjang = [];
+        localStorage.removeItem('keranjangBuNana');
+        perbaruiKeranjang();
+    }
 }
 
-// --- FITUR BARU: Proses Pesanan & Nota Digital ---
+// --- Proses Pesanan & Nota Digital ---
 function prosesPesanan() {
     if (keranjang.length === 0) {
         alert("Keranjang masih kosong! Silakan pilih menu terlebih dahulu.");
@@ -160,21 +191,17 @@ function prosesPesanan() {
     const metodePembayaran = document.querySelector('input[name="metodePembayaran"]:checked').value;
     const catatan = document.getElementById("catatanPesanan")?.value || "";
 
-    // 1. Update data penjualan di localStorage
+    // Update data penjualan di localStorage
     keranjang.forEach(item => {
         if (!salesData[item.nama]) salesData[item.nama] = 0;
         salesData[item.nama] += item.jumlah;
     });
     localStorage.setItem('salesBuNana', JSON.stringify(salesData));
     
-    // Refresh tampilan menu agar angka "Terjual" langsung berubah
     tampilkanMenu(makanan, "menuMakanan");
     tampilkanMenu(minuman, "menuMinuman");
 
-    // 2. Generate Nota
     generateNota(metodePembayaran, catatan);
-
-    // 3. Tampilkan Modal
     document.getElementById("modalNota").style.display = "flex";
 }
 
@@ -226,16 +253,13 @@ function generateNota(metode, catatan) {
     `;
     document.getElementById("notaDigital").innerHTML = notaHTML;
     
-    // Simpan data sementara untuk fungsi WhatsApp
     window.currentNotaData = { total, metode, catatan, noNota, tanggal, waktu };
 }
 
 function tutupModal() {
     document.getElementById("modalNota").style.display = "none";
-    kosongkanKeranjang();
-    // Reset catatan
-    const catatanEl = document.getElementById("catatanPesanan");
-    if (catatanEl) catatanEl.value = "";
+    // PENTING: JANGAN kosongkan keranjang di sini!
+    // Pelanggan perlu melihat pesanan jika admin info ada menu habis.
 }
 
 function cetakNota() {
@@ -273,5 +297,9 @@ function kirimWANota() {
     const urlWA = "https://api.whatsapp.com/send?phone=" + nomorAdmin + "&text=" + encodeURIComponent(pesan);
     
     window.open(urlWA, '_blank');
-    tutupModal(); // Tutup modal setelah kirim WA
+    
+    // Tutup modal saja, JANGAN kosongkan keranjang
+    tutupModal();
+    
+    alert("✅ Pesanan dikirim ke WhatsApp!\n\nJika admin menginfokan ada menu yang habis, Anda bisa langsung klik tombol 🗑️ pada menu tersebut, lalu klik 'Proses Pesanan' lagi untuk mengirim revisi.");
 }
